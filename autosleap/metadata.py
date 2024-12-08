@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec  5 17:48:47 2024
+Created on Sun Dec  8 17:20:04 2024
 
 @author: mbmad
 """
@@ -16,8 +16,21 @@ __default_setting_keys__ = ['SLEAP',
                             'H5',
                             'FR_ADJUST_ENABLED',
                             'FR_ADJUSTED',
-                            'TARGET_FRAMERATE'
+                            'TARGET_FRAMERATE',
+                            'FINAL_OUTPUT_FILE'
                             ]
+__setting_types__ = {'SLEAP': 'externalpath',
+                     'FFMPEG': 'cmd',
+                     'MODEL': 'externalpath',
+                     'VIDEO_SOURCE': 'projectpath',
+                     'VIDEO_TRANSCODED': 'projectpath',
+                     'PREDICTIONS': 'projectpath',
+                     'H5': 'projectpath',
+                     'FR_ADJUST_ENABLED': 'setting',
+                     'FR_ADJUSTED': 'projectpath',
+                     'TARGET_FRAMERATE': 'setting',
+                     'FINAL_OUTPUT_FILE': 'projectpath'
+                     }
 __default_setting_values__ = {'SLEAP': 'path/to/SLEAP/env',
                               'FFMPEG': '-c:v libx264 -crf 23 -preset fast -c:a aac -b:a 192k',
                               'MODEL': 'path/to/SLEAP/model/training_data.json',
@@ -27,8 +40,16 @@ __default_setting_values__ = {'SLEAP': 'path/to/SLEAP/env',
                               'H5': 'path/to/H5/files',
                               'FR_ADJUST_ENABLED': True,
                               'FR_ADJUSTED': 'path/to/adjusted_framerate',
-                              'TARGET_FRAMERATE': 30
+                              'TARGET_FRAMERATE': 30,
+                              'FINAL_OUTPUT_FILE': 'outputfile.h5'
                               }
+__project_structure__ = {'VIDEO_SOURCE': 'untranscoded_video',
+                         'VIDEO_TRANSCODED': 'transcoded_video',
+                         'PREDICTIONS': 'prediction_files',
+                         'H5': 'h5_files',
+                         'FR_ADJUSTED': 'framerate_adjusted_trajectories',
+                         'FINAL_OUTPUT_FILE': 'project_output.h5'
+                         }
 __default_setting_names__ = {'SLEAP': 'SLEAP conda environment path',
                              'FFMPEG': 'FFMPEG command',
                              'MODEL': 'Trained SLEAP model location',
@@ -38,5 +59,6 @@ __default_setting_names__ = {'SLEAP': 'SLEAP conda environment path',
                              'H5': 'Path to store H5 files',
                              'FR_ADJUST_ENABLED': 'Adjust prediction framerate?',
                              'FR_ADJUSTED': 'Path to store framerate adjusted data',
-                             'TARGET_FRAMERATE': 'Target Framerate'
+                             'TARGET_FRAMERATE': 'Target Framerate (fps)',
+                             'FINAL_OUTPUT_FILE': 'Path to output file'
                              }
