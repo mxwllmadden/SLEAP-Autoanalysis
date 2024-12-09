@@ -16,7 +16,7 @@ class ParameterWindow(ttk.Frame):
             tk.Entry(self, width=18, textvariable=var).grid(column=1,row=ind,padx=10,pady=10,sticky="w")
 
 class ConsoleOutput(ttk.Frame):
-    def __init__(self, master=None, max_lines=1000, **kwargs):
+    def __init__(self, master=None, max_lines=2000, **kwargs):
         super().__init__(master, **kwargs)
         self.text = ScrolledText(self, wrap=tk.WORD, font=('Courier', 10), bg='black', fg='#9b4dca')
         self.text.pack(fill='both', expand=True)

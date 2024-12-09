@@ -9,17 +9,18 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
 from dataclasses import dataclass
-from sleapy.metadata import __version__, __default_setting_keys__, \
+from autosleap.metadata import __version__, __default_setting_keys__, \
     __default_setting_names__, __default_setting_values__,\
         __setting_types__, __project_structure__
-from sleapy.utils import resource_path
-from sleapy.gui.widgets import ConsoleOutput
+from autosleap.utils import resource_path
+from autosleap.gui.widgets import ConsoleOutput
 import os
 import json
+from PIL import Image, ImageTk
 
 @dataclass
 class GuiState:
-    wizard_state = 'Idle'
+    wizard_state = 'Inactive'
     project_path = None
     project_strvar = None
     settings_strvars = {}
@@ -67,7 +68,7 @@ class GuiState:
 
 class NoneBoolVar(tk.BooleanVar):
     def set(self, value):
-        if value not in ['True','False']:
+        if value not in ['True','False', True, False]:
             value = False
         super().set(value)
 
@@ -81,7 +82,105 @@ class View:
         
         # Create GuiState to bundle everything i want access to from outside
         self.gui = GuiState()
-
+        
+        self._setup_view()
+        
+    
+    def mainloop(self):
+        self.root.mainloop()
+        
+    def update_state(self, img_state, job_text):
+        state_image_dict = {'Inactive' : 'icon128',
+                            'Idle' : 'icon_idle128',
+                            'Active' : 'icon_active128'}
+        self.set_wizard_img(state_image_dict[img_state])
+        self.status_strvar.set(job_text)
+        self.gui.sync()
+    
+    def set_wizard_img(self, asset):
+        """Set the wizard image dynamically."""
+        self._wiz_img = self.load_asset(asset)
+        self.wizard_label.config(image=self._wiz_img)
+        self.wizard_label.image = self._wiz_img
+    
+    @staticmethod
+    def load_asset(png):
+        """Load an asset (image) from the assets folder."""
+        try:
+            # Open the image using Pillow
+            image_path = resource_path(f"assets/{png}.png")
+            img = Image.open(image_path)
+            
+            # Resize the image to 2 inches across, maintaining aspect ratio
+            dpi = 96  # Assuming standard screen DPI
+            width_in_pixels = int(2 * dpi)
+            aspect_ratio = img.height / img.width
+            height_in_pixels = int(width_in_pixels * aspect_ratio)
+            
+            resized_img = img.resize((width_in_pixels, height_in_pixels), Image.Resampling.LANCZOS)
+            
+            return ImageTk.PhotoImage(resized_img)
+        except Exception as e:
+            print(f"Error loading asset '{png}': {e}")
+            return tk.PhotoImage()  # Placeholder if image fails
+    
+    @property
+    def save_location(self):
+        try:
+            # Get the Local AppData folder
+            local_appdata = os.getenv('LOCALAPPDATA')
+            if not local_appdata:
+                raise EnvironmentError("LOCALAPPDATA environment variable not found.")
+            autosleap_folder = os.path.join(local_appdata, "AutoSLEAP")
+            os.makedirs(autosleap_folder, exist_ok=True)
+            file_path = os.path.join(autosleap_folder, 'wizard_settings.json')
+            return file_path
+    
+        except Exception as e:
+            print(f"Settings file unavailable! Error: {e}")
+            return None
+        
+    def _create_project_paths(self):
+        projdir = filedialog.askdirectory()
+        if projdir is None:
+            return
+        def create_path(key, path):
+            new_path = os.path.join(projdir,path)
+            os.makedirs(new_path, exist_ok=True)
+            self.settings_strvar[key].set(new_path)
+        for key, value in __project_structure__.items():
+            create_path(key, value)
+        self.gui.sync()
+        
+    def _save_settings(self):
+        print('Saving parameters...')
+        self.gui.sync()
+        try:
+            with open(self.save_location, 'w') as json_file:
+                json.dump(self.gui.settings_values, json_file, indent=4)
+        except:
+            print('Yikes! Something went wrong and I was unable to save!')
+        print('Goodbye!')
+        self.root.destroy()
+    
+    def _load_settings(self):
+        print('Loading parameters...')
+        try:
+            with open(self.save_location, 'r') as json_file:
+                data = json.load(json_file)
+        except Exception as e:
+            print(f"Settings file invalid! Error: {e}")
+            return None
+        for setting, value in data.items():
+            if setting in __default_setting_keys__:
+                self.gui.settings_strvars[setting].set(value)
+    
+    def _setsleapmodel_fdiag(self):
+        filedialog.askopenfilename(
+            title='Select a trained SLEAP model',
+            filetypes=[('JSON files', '*.json')])
+    
+    def _setup_view(self):
         # Set icon
         self.root.iconphoto(False, self.load_asset('icon64'))
 
@@ -120,7 +219,7 @@ class View:
                 ttk.Entry(
                     settingstab, textvariable=self.settings_strvar[setting], width=50
                 ).grid(column=0, row=ind * 2 + 1, sticky="w", padx=10)
-        ttk.Button(settingstab, text = 'Reset Settings', command = self.gui.reset_settings
+        ttk.Button(settingstab, text = 'Reset Settings to Examples', command = self.gui.reset_settings
                    ).grid(row = 0, column = 0, sticky = 'w')
         self.gui.settings_strvars = self.settings_strvar
         self.gui.project_strvar = self.proj_path_strvar
@@ -163,8 +262,8 @@ class View:
         
         console_top = ConsoleOutput(rightpanel)
         console_bot = ConsoleOutput(rightpanel)
-        console_top.pack(side = 'top', fill = 'x')
-        console_bot.pack(side = 'bottom', fill = 'x')
+        console_top.pack(side = 'top', fill = 'both', expand = True)
+        console_bot.pack(side = 'bottom', fill = 'both', expand = True)
         console_top.write("This is the job feed. You will see the output from the current job here")
         console_bot.write("This is the wizard feed. You will see less verbose logging in this window.")
         self.gui.console_top = console_top
@@ -177,80 +276,8 @@ class View:
         # Sync before running
         self._load_settings()
         self.gui.sync()
-    
-    def _create_project_paths(self):
-        projdir = filedialog.askdirectory()
-        if projdir is None:
-            return
-        def create_path(key, path):
-            new_path = os.path.join(projdir,path)
-            os.makedirs(new_path, exist_ok=True)
-            self.settings_strvar[key].set(new_path)
-        for key, value in __project_structure__.items():
-            create_path(key, value)
-        self.gui.sync()
-    
-    @property
-    def save_location(self):
-        try:
-            # Get the Local AppData folder
-            local_appdata = os.getenv('LOCALAPPDATA')
-            if not local_appdata:
-                raise EnvironmentError("LOCALAPPDATA environment variable not found.")
-            autosleap_folder = os.path.join(local_appdata, "AutoSLEAP")
-            os.makedirs(autosleap_folder, exist_ok=True)
-            file_path = os.path.join(autosleap_folder, 'wizard_settings.json')
-            return file_path
-    
-        except Exception as e:
-            print(f"Settings file unavailable! Error: {e}")
-            return None
-        
-    
-    def _save_settings(self):
-        print('Saving parameters...')
-        self.gui.sync()
-        try:
-            with open(self.save_location, 'w') as json_file:
-                json.dump(self.gui.settings_values, json_file, indent=4)
-        except:
-            print('Yikes! Something went wrong and I was unable to save!')
-        print('Goodbye!')
-        self.root.destroy()
-    
-    def _load_settings(self):
-        print('Loading parameters...')
-        try:
-            with open(self.save_location, 'r') as json_file:
-                data = json.load(json_file)
-        except Exception as e:
-            print(f"Settings file invalid! Error: {e}")
-            return None
-        for setting, value in data.items():
-            if setting in __default_setting_keys__:
-                self.gui.settings_strvars[setting].set(value)
-    
-    def _setsleapmodel_fdiag(self):
-        filedialog.askopenfilename(
-            title='Select a trained SLEAP model',
-            filetypes=[('JSON files', '*.json')])
 
-    def set_wizard_img(self, asset):
-        """Set the wizard image dynamically."""
-        self._wiz_img = self.load_asset(asset)
-        self.wizard_label.config(image=self._wiz_img)
-
-    @staticmethod
-    def load_asset(png):
-        """Load an asset (image) from the assets folder."""
-        try:
-            return tk.PhotoImage(file=resource_path(f"assets/{png}.png"))
-        except tk.TclError as e:
-            print(f"Error loading asset '{png}': {e}")
-            return tk.PhotoImage()  # Placeholder if image fails
-
-    def mainloop(self):
-        self.root.mainloop()
+    
 
 
 if __name__ == '__main__':
