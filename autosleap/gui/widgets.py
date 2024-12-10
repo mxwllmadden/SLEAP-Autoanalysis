@@ -16,9 +16,9 @@ class ParameterWindow(ttk.Frame):
             tk.Entry(self, width=18, textvariable=var).grid(column=1,row=ind,padx=10,pady=10,sticky="w")
 
 class ConsoleOutput(ttk.Frame):
-    def __init__(self, master=None, max_lines=2000, **kwargs):
+    def __init__(self, master=None, max_lines=2000, textcolor = '#9b4dca', **kwargs):
         super().__init__(master, **kwargs)
-        self.text = ScrolledText(self, wrap=tk.WORD, font=('Courier', 10), bg='black', fg='#9b4dca')
+        self.text = ScrolledText(self, wrap=tk.WORD, font=('Courier', 10), bg='black', fg=textcolor)
         self.text.pack(fill='both', expand=True)
         self.text.config(state='disabled')
         self.max_lines = max_lines  # Limit the number of lines

@@ -7,3 +7,4 @@ Created on Thu Dec  5 17:48:47 2024
 
 
 from autosleap.autoanalysis import AutoAnalysis
+from autosleap.gui import App

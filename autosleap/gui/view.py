@@ -21,6 +21,7 @@ from PIL import Image, ImageTk
 @dataclass
 class GuiState:
     wizard_state = 'Inactive'
+    wizard_state_update = None
     project_path = None
     project_strvar = None
     settings_strvars = {}
@@ -76,15 +77,19 @@ class View:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title(f'SLEAP Wizard v{__version__} - SLEAP analysis wizard created by Maxwell Madden')
-        self.root.geometry("1000x500")
+        self.root.geometry("1000x600")
         self.root.resizable(True, True)
         self.root.minsize(1000, 500)
+        self.root.protocol('WM_DELTE_WINDOW',self._on_close)
         
         # Create GuiState to bundle everything i want access to from outside
         self.gui = GuiState()
+        self.gui.wizard_state_update = self.update_state
         
         self._setup_view()
-        
+    
+    def _on_close(self):
+        os._exit(0)
     
     def mainloop(self):
         self.root.mainloop()
@@ -176,9 +181,12 @@ class View:
                 self.gui.settings_strvars[setting].set(value)
     
     def _setsleapmodel_fdiag(self):
-        filedialog.askopenfilename(
+        file = filedialog.askopenfilename(
             title='Select a trained SLEAP model',
             filetypes=[('JSON files', '*.json')])
+        if file is not None:
+            self.settings_strvar['MODEL'].set(file)
+            self.gui.sync()
     
     def _setup_view(self):
         # Set icon
@@ -191,7 +199,7 @@ class View:
         # Panel organization
         leftpanel = ttk.Notebook(self.root)
         rightpanel = ttk.Frame(self.root)
-        leftpanel.pack(side='left', fill='both', expand=True)
+        leftpanel.pack(side='left', fill='both', expand=False)
         rightpanel.pack(side='right', fill='both', expand=True)
 
         # Notebook tabs
@@ -201,7 +209,7 @@ class View:
         leftpanel.add(settingstab, text='Settings')
         
         # Settings Setup
-        self.proj_path_strvar = tk.StringVar()
+        self.gui.project_strvar = tk.StringVar()
         self.settings_strvar = {}
         row_offset = 1
         for ind, setting in enumerate(__default_setting_keys__):
@@ -222,7 +230,6 @@ class View:
         ttk.Button(settingstab, text = 'Reset Settings to Examples', command = self.gui.reset_settings
                    ).grid(row = 0, column = 0, sticky = 'w')
         self.gui.settings_strvars = self.settings_strvar
-        self.gui.project_strvar = self.proj_path_strvar
 
         # Wizard Tab setup
         for i in range(2):  
@@ -231,6 +238,7 @@ class View:
         self.wizard_label.grid(row=0, column=0, columnspan=2, sticky="nsew", pady=2)
         self.set_wizard_img('icon128')
         self.status_strvar = tk.StringVar(value="Wizard is Sleeping (Inactive)")
+        self.gui.status_strvar = self.status_strvar
         ttk.Label(fronttab, textvariable=self.status_strvar, anchor="center"
                   ).grid(row=1, column=0, columnspan=2, sticky="nsew", pady=2)
         ttk.Separator(fronttab, orient = 'horizontal'
@@ -241,11 +249,12 @@ class View:
         ttk.Label(fronttab, anchor = 'w', text = 'Current selected SLEAP model',
                   font = ('Arial', 10, 'underline')
                   ).grid(row = 4, column = 0, sticky = 'w', pady = 5)
-        ttk.Label(fronttab, anchor = 'w', textvariable = self.settings_strvar['SLEAP']
+        ttk.Label(fronttab, anchor = 'w', textvariable = self.settings_strvar['MODEL'],
+                  wraplength=300
                   ).grid(row = 5, column = 0, sticky = 'w', pady = 5)
         ttk.Button(fronttab, text = 'Select Model', command = self._setsleapmodel_fdiag
                    ).grid(row = 5, column = 1, sticky = 'e', pady = 5)
-        ttk.Label(fronttab, anchor = 'w', text = 'Current SLEAP Wizard Automated Project Folder',
+        ttk.Label(fronttab, anchor = 'w', text = 'Current AutoSLEAP Wizard Project Folder',
                   font = ('Arial', 10, 'underline')
                   ).grid(row = 6, column = 0, sticky = 'w', pady = 5)
         ttk.Label(fronttab, anchor = 'w', textvariable = self.gui.project_strvar,
@@ -256,12 +265,12 @@ class View:
                    ).grid(row = 7, column = 1, sticky = 'e', pady = 5)
         ttk.Separator(fronttab, orient = 'horizontal'
                       ).grid(row = 8, column = 0, columnspan = 2, pady=5, sticky = 'nsew')
-        self.run_button = ttk.Button(fronttab, text='BEGIN PROCESSING').grid(
-            row=9, column=0, columnspan = 2, sticky='nsew', pady=5)
+        self.run_button = ttk.Button(fronttab, text='BEGIN PROCESSING')
+        self.run_button.grid(row=9, column=0, columnspan = 2, sticky='nsew', pady=5)
         self.gui.run_button = self.run_button
         
         console_top = ConsoleOutput(rightpanel)
-        console_bot = ConsoleOutput(rightpanel)
+        console_bot = ConsoleOutput(rightpanel, textcolor = '#FFA500')
         console_top.pack(side = 'top', fill = 'both', expand = True)
         console_bot.pack(side = 'bottom', fill = 'both', expand = True)
         console_top.write("This is the job feed. You will see the output from the current job here")

@@ -8,6 +8,7 @@ Created on Sun Dec  8 17:20:04 2024
 __version__ = '0.1.0'
 
 __default_setting_keys__ = ['SLEAP',
+                            'CONDA',
                             'FFMPEG',
                             'MODEL',
                             'VIDEO_SOURCE',
@@ -20,6 +21,7 @@ __default_setting_keys__ = ['SLEAP',
                             'FINAL_OUTPUT_FILE'
                             ]
 __setting_types__ = {'SLEAP': 'externalpath',
+                     'CONDA': 'externalpath',
                      'FFMPEG': 'cmd',
                      'MODEL': 'externalpath',
                      'VIDEO_SOURCE': 'projectpath',
@@ -32,7 +34,8 @@ __setting_types__ = {'SLEAP': 'externalpath',
                      'FINAL_OUTPUT_FILE': 'projectpath'
                      }
 __default_setting_values__ = {'SLEAP': 'path/to/SLEAP/env',
-                              'FFMPEG': '-c:v libx264 -crf 23 -preset fast -c:a aac -b:a 192k',
+                              'CONDA': r'C:\Users\<YourUsername>\anaconda3\Scripts\activate.bat',
+                              'FFMPEG': '-filter:v "fps=fps=30" -c:v libx264 -pix_fmt yuv420p -preset superfast -crf 23',
                               'MODEL': 'path/to/SLEAP/model/training_data.json',
                               'VIDEO_SOURCE': 'path/to/untranscodedvideo',
                               'VIDEO_TRANSCODED': 'path/to/tracoded/videos',
@@ -43,6 +46,7 @@ __default_setting_values__ = {'SLEAP': 'path/to/SLEAP/env',
                               'TARGET_FRAMERATE': 30,
                               'FINAL_OUTPUT_FILE': 'outputfile.h5'
                               }
+
 __project_structure__ = {'VIDEO_SOURCE': 'untranscoded_video',
                          'VIDEO_TRANSCODED': 'transcoded_video',
                          'PREDICTIONS': 'prediction_files',
@@ -51,6 +55,7 @@ __project_structure__ = {'VIDEO_SOURCE': 'untranscoded_video',
                          'FINAL_OUTPUT_FILE': 'project_output.h5'
                          }
 __default_setting_names__ = {'SLEAP': 'SLEAP conda environment path',
+                             'CONDA': 'Anaconda activate.bat script',
                              'FFMPEG': 'FFMPEG command',
                              'MODEL': 'Trained SLEAP model location',
                              'VIDEO_SOURCE': 'Path to original video files',
@@ -62,3 +67,9 @@ __default_setting_names__ = {'SLEAP': 'SLEAP conda environment path',
                              'TARGET_FRAMERATE': 'Target Framerate (fps)',
                              'FINAL_OUTPUT_FILE': 'Path to output file'
                              }
+__accepted_video_extensions__ = [".mp4", ".mkv", ".mov", ".flv", ".wmv",
+                                 ".webm", ".mpg", ".mpeg", ".ts", ".m2ts",
+                                 ".3gp", ".vob", ".mxf", ".avi", ".m4v",
+                                 ".f4v", ".rm", ".rmvb", ".asf", ".ogv",
+                                 ".dv", ".amv", ".qt", ".yuv", ".ivf"
+                                 ]
