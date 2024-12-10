@@ -69,6 +69,12 @@ class ConvertJob(JobInterface):
 
 class FramerateAdjustJob(JobInterface):
     def run(self):
+        """
+        identify source video
+        extract all the frame timings from the video
+        adjust the frame timings with the old function logic
+        save the old, new trajectories and the frame timinings in h5
+        """
         pass
 
     def job_type(self):
@@ -76,7 +82,7 @@ class FramerateAdjustJob(JobInterface):
 
 
 class FinalOutput(JobInterface):
-    def run(self, outputfunction):
+    def run(self):
         pass
 
     def job_type(self):

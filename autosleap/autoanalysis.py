@@ -122,7 +122,7 @@ class AutoAnalysis():
         self.loopstate = 'Active'
         while True:
             self.reporter.state_update(self.loopstate)
-            self.reporter.jobs_remaining('Remaining Jobs Not Yet Implemented')
+            self.reporter.jobs_remaining('Estimated Remaining Jobs Not Yet Implemented')
             
             if self.loopstate == 'Active':
                 report = self.joblist.run_next(self.reporter)

@@ -20,6 +20,7 @@ requirements:
     - numpy
     - pandas
     - pillow
+    - opencv
     - ffmpeg
 
 about:
