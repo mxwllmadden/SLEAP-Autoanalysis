@@ -1,4 +1,4 @@
-version = "0.1.0"
+version = "0.1.1"
 name = "autosleap"
 authors = [
     {name = "Maxwell Madden", email = "mxwllmadden@gmail.com"}
@@ -18,6 +18,8 @@ dependencies = [
     "matplotlib"
 ]
 
+[project.scripts]
+autosleap = "autosleap.cli_parser:main"
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]

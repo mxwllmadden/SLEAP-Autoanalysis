@@ -8,6 +8,7 @@ Created on Fri Dec  6 14:27:34 2024
 import argparse
 import json
 import os
+from autosleap.gui import App
 
 from autosleap.metadata import __default_setting_values__, \
     __setting_types__
@@ -43,12 +44,14 @@ def main():
             with open('.'.join(args.file,'autosleap'), 'r') as file:
                 data = json.load(file)
                 check_file(data)
-                analysis = AutoAnalysis(data)
+                analysis = AutoAnalysis(**data)
                 analysis.run()
         except Exception as e:
             print(f'Failed to process AutoSLEAP due to {e}')
     elif args.commands == 'wizard':
         print("Opening the AutoSLEAP wizard...")
+        App().run()
+        
         
 def check_file(data : dict):
     for setting in __default_setting_values__:
