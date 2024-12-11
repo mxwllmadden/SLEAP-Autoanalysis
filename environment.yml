@@ -1,0 +1,12 @@
+name: autosleap
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - matplotlib
+  - numpy
+  - opencv
+  - python
+  - pillow
+  - ffmpeg

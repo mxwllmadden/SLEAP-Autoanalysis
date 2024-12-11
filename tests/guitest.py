@@ -9,7 +9,7 @@ import json
 
 from autosleap.gui.app import App
 
-with open('K:/SLEAP-Autoanalysis/tests/settings.json','r') as file:
+with open('settings.json','r') as file:
     settings = json.load(file)
 
 settings['FR_ADJUST_ENABLED'] = False
