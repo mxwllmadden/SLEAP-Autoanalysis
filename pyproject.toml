@@ -1,3 +1,4 @@
+[project]
 version = "0.1.1"
 name = "autosleap"
 authors = [
@@ -8,18 +9,22 @@ requires-python = ">=3.10"
 classifiers = [
     "License :: OSI Approved :: GNU General Public License (GPL)",
     "Environment :: Console",
-	  "Intended Audience :: Science/Research",
-	  "Programming Language :: Python :: 3"
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3"
 ]
 dependencies = [
     "numpy",
     "opencv",
     "pillow",
-    "matplotlib"
+    "matplotlib",
+    "ffmpeg-python"
 ]
 
 [project.scripts]
 autosleap = "autosleap.cli_parser:main"
+
+[tool.setuptools.package-data]
+"example_package" = ["assets/*"]
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
