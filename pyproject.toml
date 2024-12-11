@@ -6,7 +6,7 @@ authors = [
 description = "Python package to automate some aspects of SLEAP analysis."
 requires-python = ">=3.10"
 classifiers = [
-    "License :: OSI Approved :: GPL License",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
     "Environment :: Console",
 	  "Intended Audience :: Science/Research",
 	  "Programming Language :: Python :: 3"
@@ -14,7 +14,6 @@ classifiers = [
 dependencies = [
     "numpy",
     "opencv",
-    "ffmpeg",
     "pillow",
     "matplotlib"
 ]
