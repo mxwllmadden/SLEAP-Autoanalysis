@@ -1,5 +1,5 @@
 [project]
-version = "0.1.1"
+version = "0.1.2"
 name = "autosleap"
 authors = [
     {name = "Maxwell Madden", email = "mxwllmadden@gmail.com"}
@@ -16,15 +16,14 @@ dependencies = [
     "numpy",
     "opencv",
     "pillow",
-    "matplotlib",
-    "ffmpeg-python"
+    "matplotlib"
 ]
 
 [project.scripts]
 autosleap = "autosleap.cli_parser:main"
 
 [tool.setuptools.package-data]
-"example_package" = ["assets/*"]
+austosleap = ["assets/*"]
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]

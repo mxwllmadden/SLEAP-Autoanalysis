@@ -1,0 +1,49 @@
+{% set name = "autosleap" %}
+{% set version = "0.1.2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/autosleap-{{ version }}.tar.gz
+  sha256: baac6a76c5fb3786cf5462aea5b12ead8d91482a4ca3a7911aad28a89164b1dc
+
+build:
+  entry_points:
+    - autosleap = autosleap.cli_parser:main
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.10
+    - setuptools
+    - setuptools-scm
+    - pip
+  run:
+    - python >=3.10
+    - numpy
+    - opencv
+    - pillow
+    - matplotlib-base
+    - ffmpeg
+
+test:
+  imports:
+    - autosleap
+  commands:
+    - pip check
+    - autosleap --help
+  requires:
+    - pip
+
+about:
+  summary: Python package to automate some aspects of SLEAP analysis.
+  license: GPL-3.0
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - mxwllmadden
