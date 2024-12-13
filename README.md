@@ -11,7 +11,8 @@ Create a new conda environment that contains autosleap with the following comman
  autosleap can be imported as a python package using
 
  '''python
- import autosleap'''
+ import autosleap
+ '''
  
 ## Build Instructions (for my own reference)
 
