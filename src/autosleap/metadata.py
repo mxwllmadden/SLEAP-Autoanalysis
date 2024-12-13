@@ -35,7 +35,7 @@ __setting_types__ = {'SLEAP': 'externalpath',
                      }
 __default_setting_values__ = {'SLEAP': 'path/to/SLEAP/env',
                               'CONDA': r'C:\Users\<YourUsername>\anaconda3\Scripts\activate.bat',
-                              'FFMPEG': '-filter:v "fps=fps=30" -c:v libx264 -pix_fmt yuv420p -preset superfast -crf 23',
+                              'FFMPEG': '-vsync 0 -f image2pipe -vcodec ppm - | ffmpeg -f image2pipe -framerate 25 -i - -c:v libx264 -crf 23 -pix_fmt yuv420p',
                               'MODEL': 'path/to/SLEAP/model/training_data.json',
                               'VIDEO_SOURCE': 'path/to/untranscodedvideo',
                               'VIDEO_TRANSCODED': 'path/to/tracoded/videos',

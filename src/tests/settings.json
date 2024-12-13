@@ -1,0 +1,14 @@
+{
+    "SLEAP": "C:\\Users\\mbmad\\anaconda3\\envs\\sleap",
+    "CONDA": "C:\\Users\\mbmad\\anaconda3\\Scripts\\activate.bat",
+    "FFMPEG": "-filter:v \"fps=fps=30\" -c:v libx264 -pix_fmt yuv420p -preset superfast -crf 23",
+    "MODEL": "K:/sleap_tracking_model/attempt_at_final_model240827_222524.single_instance.n=992/training_config.json",
+    "VIDEO_SOURCE": "K:/mytestproject\\untranscoded_video",
+    "VIDEO_TRANSCODED": "K:/mytestproject\\transcoded_video",
+    "PREDICTIONS": "K:/mytestproject\\prediction_files",
+    "H5": "K:/mytestproject\\h5_files",
+    "FR_ADJUST_ENABLED": true,
+    "FR_ADJUSTED": "K:/mytestproject\\framerate_adjusted_trajectories",
+    "TARGET_FRAMERATE": "30",
+    "FINAL_OUTPUT_FILE": "K:/mytestproject\\project_output.h5"
+}
