@@ -32,14 +32,6 @@ Autosleap includes some useful utility and visualization functions in addition t
 ```python
 import autosleap
 ```
-
- ## Use
-
- autosleap can be imported as a python package using
-
- ```python
- import autosleap
- ```
  
 ## Build Instructions (for my own reference)
 
