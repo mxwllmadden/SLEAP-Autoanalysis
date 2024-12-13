@@ -4,7 +4,7 @@ Created on Sun Dec  8 17:15:22 2024
 
 @author: mbmad
 """
-from autosleap.utils import job_batchfile_create
+from autosleap.files import job_batchfile_create
 from datetime import datetime
 import subprocess
 import threading

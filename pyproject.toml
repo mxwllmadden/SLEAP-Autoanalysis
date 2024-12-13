@@ -1,5 +1,5 @@
 [project]
-version = "0.1.2"
+version = "0.1.3"
 name = "autosleap"
 authors = [
     {name = "Maxwell Madden", email = "mxwllmadden@gmail.com"}
@@ -14,7 +14,6 @@ classifiers = [
 ]
 dependencies = [
     "numpy",
-    "opencv",
     "pillow",
     "matplotlib"
 ]

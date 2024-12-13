@@ -32,16 +32,16 @@ def main():
     args = parser.parse_args()
     
     if args.commands == 'new':
-        print(f"Creating a new AutoSLEAP file with path: {args.file}.autosleap")
+        print(f"Creating a new AutoSLEAP file with path: {args.file}.autosleap_config")
         try:
-            with open('.'.join(args.file,'autosleap'), 'w') as file:
+            with open('.'.join([args.file,'autosleap_config']), 'w') as file:
                 json.dump(__default_setting_values__, file, indent = 4)
         except Exception as e:
             print(f'Failed to create AutoSLEAP due to {e}')
     elif args.commands == 'run':
-        print(f"Running AutoSLEAP analysis for file: {args.file}.autosleap")
+        print(f"Running AutoSLEAP analysis for file: {args.file}.autosleap_config")
         try:
-            with open('.'.join(args.file,'autosleap'), 'r') as file:
+            with open('.'.join([args.file,'autosleap_config']), 'r') as file:
                 data = json.load(file)
                 check_file(data)
                 analysis = AutoAnalysis(**data)

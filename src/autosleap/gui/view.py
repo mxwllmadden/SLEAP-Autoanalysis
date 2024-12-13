@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from autosleap.metadata import __version__, __default_setting_keys__, \
     __default_setting_names__, __default_setting_values__,\
         __setting_types__, __project_structure__
-from autosleap.utils import resource_path
+from autosleap.files import resource_path
 from autosleap.gui.widgets import ConsoleOutput
 import os
 import json
