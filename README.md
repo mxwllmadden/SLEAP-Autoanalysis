@@ -42,7 +42,7 @@ python -m build --sdist
 ```
 
 ```console
-twine upload --respository pypi dist
+twine upload --respository pypi dist\*
 ```
 
 ```console
