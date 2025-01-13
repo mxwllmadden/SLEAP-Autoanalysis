@@ -10,3 +10,4 @@ dependencies:
   - python
   - pillow
   - ffmpeg
+  - h5py
