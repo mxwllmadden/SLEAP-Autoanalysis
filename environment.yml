@@ -1,7 +1,7 @@
 name: autosleap
 channels:
-  - anaconda
   - conda-forge
+  - anaconda
   - defaults
 dependencies:
   - matplotlib
