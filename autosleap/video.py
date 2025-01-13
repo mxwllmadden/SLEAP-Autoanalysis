@@ -6,7 +6,6 @@ Created on Tue Dec 10 17:07:37 2024
 """
 import numpy as np
 import cv2
-import json
 from matplotlib import pyplot as plt
 
 def get_all_frame_times(videopath):
@@ -27,19 +26,16 @@ def get_all_frame_times(videopath):
         return np.array(frame_timings)[:, np.newaxis]
     return None
 
-def downsample_trajectory(frametimes, trajectories):
-    pass
+
 
 
 if __name__ == '__main__':
-    file = 'D:/Kiwi_Backup_10_27_24/Kiwi/Maxwell_PsiloObjRewApproach_Test/Media Files/Trial  4505.mpg'
-    f2 = 'C:/Users/Maxwell/Documents/GitHub/SLEAP-Autoanalysis/final_cfr_output.mp4'
+    file = 'K:/mytestproj/untranscoded_video/Trial3826.mpg'
     t = get_all_frame_times(file)
-    t2 = get_all_frame_times(f2)
     
     
     plt.figure()
-    plt.plot(t-t2)
+    plt.plot(t)
     plt.show()
     
     

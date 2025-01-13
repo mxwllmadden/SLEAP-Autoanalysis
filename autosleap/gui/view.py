@@ -50,9 +50,9 @@ class GuiState:
                 else:
                     self.settings_values[setting] = value
                 self.old_vals[setting] = self.settings_values[setting]
-        if self.settings_values['FINAL_OUTPUT_FILE'] is None:
+        if self.settings_values['VIDEO_SOURCE'] is None:
             return
-        proj_path = os.path.dirname(self.settings_values['FINAL_OUTPUT_FILE'])
+        proj_path = os.path.dirname(self.settings_values['VIDEO_SOURCE'])
         paths_match = all([os.path.dirname(dir_path) == proj_path 
                            for setting, dir_path in self.settings_values.items()
                            if __setting_types__[setting] == 'projectpath'])
@@ -147,7 +147,8 @@ class View:
         
     def _create_project_paths(self):
         projdir = filedialog.askdirectory()
-        if projdir is None:
+        print(projdir)
+        if projdir in [None,'']:
             return
         def create_path(key, path):
             new_path = os.path.join(projdir,path)
@@ -184,7 +185,7 @@ class View:
         file = filedialog.askopenfilename(
             title='Select a trained SLEAP model',
             filetypes=[('JSON files', '*.json')])
-        if file is not None:
+        if file not in [None,'']:
             self.settings_strvar['MODEL'].set(file)
             self.gui.sync()
     

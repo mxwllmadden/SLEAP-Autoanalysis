@@ -5,7 +5,7 @@ Created on Sun Dec  8 17:20:04 2024
 @author: mbmad
 """
 
-__version__ = '0.1.3'
+__version__ = '1.0.1'
 
 __default_setting_keys__ = ['SLEAP',
                             'CONDA',
@@ -17,8 +17,7 @@ __default_setting_keys__ = ['SLEAP',
                             'H5',
                             'FR_ADJUST_ENABLED',
                             'FR_ADJUSTED',
-                            'TARGET_FRAMERATE',
-                            'FINAL_OUTPUT_FILE'
+                            'TARGET_FRAMERATE'
                             ]
 __setting_types__ = {'SLEAP': 'externalpath',
                      'CONDA': 'externalpath',
@@ -30,8 +29,7 @@ __setting_types__ = {'SLEAP': 'externalpath',
                      'H5': 'projectpath',
                      'FR_ADJUST_ENABLED': 'setting',
                      'FR_ADJUSTED': 'projectpath',
-                     'TARGET_FRAMERATE': 'setting',
-                     'FINAL_OUTPUT_FILE': 'projectpath'
+                     'TARGET_FRAMERATE': 'setting'
                      }
 __default_setting_values__ = {'SLEAP': 'path/to/SLEAP/env',
                               'CONDA': r'C:\Users\<YourUsername>\anaconda3\Scripts\activate.bat',
@@ -43,16 +41,14 @@ __default_setting_values__ = {'SLEAP': 'path/to/SLEAP/env',
                               'H5': 'path/to/H5/files',
                               'FR_ADJUST_ENABLED': True,
                               'FR_ADJUSTED': 'path/to/adjusted_framerate',
-                              'TARGET_FRAMERATE': 30,
-                              'FINAL_OUTPUT_FILE': 'outputfile.h5'
+                              'TARGET_FRAMERATE': 10
                               }
 
 __project_structure__ = {'VIDEO_SOURCE': 'untranscoded_video',
                          'VIDEO_TRANSCODED': 'transcoded_video',
                          'PREDICTIONS': 'prediction_files',
                          'H5': 'h5_files',
-                         'FR_ADJUSTED': 'framerate_adjusted_trajectories',
-                         'FINAL_OUTPUT_FILE': 'project_output.h5'
+                         'FR_ADJUSTED': 'framerate_adjusted_trajectories'
                          }
 __default_setting_names__ = {'SLEAP': 'SLEAP conda environment path',
                              'CONDA': 'Anaconda activate.bat script',
@@ -64,8 +60,7 @@ __default_setting_names__ = {'SLEAP': 'SLEAP conda environment path',
                              'H5': 'Path to store H5 files',
                              'FR_ADJUST_ENABLED': 'Adjust prediction framerate?',
                              'FR_ADJUSTED': 'Path to store framerate adjusted data',
-                             'TARGET_FRAMERATE': 'Target Framerate (fps)',
-                             'FINAL_OUTPUT_FILE': 'Path to output file'
+                             'TARGET_FRAMERATE': 'Target Framerate (fps)'
                              }
 __accepted_video_extensions__ = [".mp4", ".mkv", ".mov", ".flv", ".wmv",
                                  ".webm", ".mpg", ".mpeg", ".ts", ".m2ts",

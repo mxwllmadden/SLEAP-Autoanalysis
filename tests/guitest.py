@@ -9,11 +9,7 @@ import json
 
 from autosleap.gui.app import App
 
-with open('settings.json','r') as file:
-    settings = json.load(file)
 
-settings['FR_ADJUST_ENABLED'] = False
 app = App()
-app.gui.settings_values = settings
 app.gui.sync()
 app.run()

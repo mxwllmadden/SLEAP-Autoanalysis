@@ -27,6 +27,9 @@ class JobInterface():
         """
         create batch file then run it using the run_batch function
         """
+        if ' ' in self.token:
+            self.reporter.job_print('WARNING!!!! SPACES DETECTED IN FILENAME. CHANGE FILENAME OR JOB WILL FAIL!!!!')
+            return False
         with open(self.batch_fpath,'w') as file:
             file.write(self.job_construct_batch_contents())
         run_batch(self.batch_fpath, self.reporter)

@@ -52,9 +52,13 @@ class App():
                                                 daemon = True)
             autosleap_thread.start()
             self.gui.wizard_state == 'Active'
-        elif self.gui.wizard_state == 'Active':
+            self.gui.run_button.config(text = 'END PROCESSING')
+        elif self.gui.wizard_state in ['Active','Idle']:
             self.autosleap.loopstate = 'Inactive'
-            self.gui.wizard_state = 'Idle'
+            self.reporter.state_update('Inactive')
+            self.reporter.jobs_remaining('Processing will cease after completing current job\nplease do not close until processing ceases')
+            self.autosleap.joblist.clear()
+            self.gui.run_button.config(text = 'BEGIN PROCESSING')
 
 if __name__ == '__main__':
     App().run()

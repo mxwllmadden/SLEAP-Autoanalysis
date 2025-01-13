@@ -8,10 +8,10 @@ Created on Fri Dec  6 16:17:32 2024
 import time
 import os
 from dataclasses import dataclass
-from autosleap.process import TranscodeJob, TrackJob, ConvertJob, FramerateAdjustJob,\
-    FinalOutput
+from autosleap.process import TranscodeJob, TrackJob, ConvertJob, FramerateAdjustJob
 
 from autosleap.metadata import __default_setting_keys__, __accepted_video_extensions__
+from autosleap.files import extract_filetoken, get_files_in
 
 class Joblist():
     def __init__(self):
@@ -21,11 +21,17 @@ class Joblist():
         self.list.append(job_object)
         
     def joblengths(self):
-        raise NotImplementedError('')
+        lengths = {}
+        for job in self.list:
+            num, jobtype = job.job_type()
+            if num not in lengths:
+                lengths[num] = 0
+            lengths[num] += 1
+        return lengths
         
     def run_next(self, output_function):
         if not self.list:
-            print('No jobs available')
+            print('No jobs available, checking for new jobs...')
             return None
         success = self.list[0].run()
         report = (success, self.list[0].token, self.list[0].job_type()[1])
@@ -35,6 +41,9 @@ class Joblist():
     def sort(self):
         self.list = sorted(self.list, key= lambda x : x.job_type()[0])
         
+    def clear(self):
+        self.list = []
+        
 
 @dataclass
 class Reporter():
@@ -42,21 +51,8 @@ class Reporter():
     analysis_print = print
     state_update = print
     jobs_remaining = print
-    
 
-def get_files_in(directory: str, extensions: list):
-    files = [
-        os.path.join(directory, file) for file in os.listdir(directory)
-        if os.path.isfile(os.path.join(directory, file)) and file.lower().endswith(tuple(extensions))
-    ]
-    return files
 
-def extract_filetoken(path):
-    token = os.path.splitext(os.path.basename(path))[0]
-    if '.' not in token:
-        return token
-    return extract_filetoken(token)
-    
 class AutoAnalysis():
     def __init__(self, reporter = Reporter(), **settings):
         # Create the joblist, settings, and reporter
@@ -74,7 +70,9 @@ class AutoAnalysis():
         if self.settings['THIS_CONDA'] is None:
             raise RuntimeError('This project must be run inside a Conda environment')
     
-    def update_joblist(self):
+    def update_joblist(self, purge = False):
+        if purge is True:
+            self.joblist.clear()
         # Create the jobsqueue
         jobsqueue = {TranscodeJob: (self.settings['VIDEO_SOURCE'],
                                    self.settings['VIDEO_TRANSCODED'],
@@ -115,6 +113,16 @@ class AutoAnalysis():
                         self.reporter
                         )
                 )
+    def job_estimate(self):
+        lengths = self.joblist.joblengths()
+        if self.settings['FR_ADJUST_ENABLED'] is True:
+            last_job = 5
+        else:
+            last_job = 4
+        num = 0
+        for jobcode, number in lengths.items():
+            num += (last_job - jobcode) * number
+        return num
         
     
     def run(self, idlewait = 61, quit_on_idle = False):
@@ -122,7 +130,8 @@ class AutoAnalysis():
         self.loopstate = 'Active'
         while True:
             self.reporter.state_update(self.loopstate)
-            self.reporter.jobs_remaining('Estimated Remaining Jobs Not Yet Implemented')
+            jobs_estimate = self.job_estimate()
+            self.reporter.jobs_remaining(f'Estimated {jobs_estimate} jobs remain')
             
             if self.loopstate == 'Active':
                 report = self.joblist.run_next(self.reporter)
