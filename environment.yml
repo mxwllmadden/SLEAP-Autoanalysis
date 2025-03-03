@@ -6,8 +6,8 @@ channels:
 dependencies:
   - matplotlib
   - numpy
-  - opencv
   - python
   - pillow
   - ffmpeg
+  - ffmpeg-python
   - h5py

@@ -5,8 +5,27 @@ Created on Tue Dec 10 17:07:37 2024
 @author: mbmad
 """
 import numpy as np
-import cv2
+import ffmpeg
 from matplotlib import pyplot as plt
+
+
+def get_all_frame_times(videopath):
+    try:
+        probe = ffmpeg.probe(videopath, select_streams='v',
+                             show_entries='frame=pts_time')
+        print(probe['frames'])
+        frame_timings = [float(frame['pts_time']) for frame in probe['frames']
+                         if 'pts_time' in frame]
+        print(frame_timings)
+
+        return np.array(frame_timings, dtype=np.float64)
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+
+"""
+DEPRECIATED
 
 def get_all_frame_times(videopath):
     capture = cv2.VideoCapture(videopath)
@@ -39,6 +58,7 @@ if __name__ == '__main__':
     plt.show()
     
     
+"""
 """
 
 ffmpeg -i "D:/Kiwi_Backup_10_27_24/Kiwi/Maxwell_PsiloObjRewApproach_Test/Media Files/Trial  4505.mpg" -vsync vfr -c:v libx264 -pix_fmt yuv420p -preset superfast -crf 23 output.mp4
